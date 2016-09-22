@@ -1,3 +1,5 @@
+#arbitrary edit
+
 # Diagnostics project
 
 Script go in the `scripts` directory.
