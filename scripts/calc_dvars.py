@@ -52,10 +52,21 @@ def calc_image_dvars(img):
     """
     # For each voxel, calculate the differences between each volume and the one
     # following;
-    #
-    # Square the differences;
-    # Sum over voxels for each volume, and divide by the number of voxels;
-    # Return the square root of these values.
+    volumes = img.shape[-1]
+    nvoxels = img.shape[0]*img.shape[1]*img.shape[2]
+    dvars = []
+
+    for i in range(volumes - 1):
+        data = img.get_data()
+        diffs = data[:,:,:,i] - data[:,:,:,i + 1]
+        diffs = diffs**2 # Square the differences;
+        sumdiffs = sum(diffs.ravel()) # Sum over voxels for each volumevoxels;
+        avgdiffs = sumdiffs/nvoxels #divide by number of voxels
+        sqdiffs = np.sqrt(avgdiffs) # Return the square root of these values.
+        dvars.append(sqdiffs)
+
+    return dvars
+
     raise RuntimeError('No code yet')
 
 
