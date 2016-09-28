@@ -23,7 +23,13 @@ def file_hash(filename):
         SHA1 hexadecimal hash string for contents of `filename`.
     """
     # Open the file, read contents as bytes.
+    # Open a file in Read Binary mode to read bytes
+    fobj = open(filename, 'rb')# Read contents as bytes
+    contents = fobj.read() # Read the whole file
+    fobj.close()
     # Calculate, return SHA1 has on the bytes from the file.
+    return hashlib.sha1(contents).hexdigest()
+
     raise RuntimeError('No code yet')
 
 
@@ -46,7 +52,17 @@ def validate_data(data_directory):
         ``data_hashes.txt`` file.
     """
     # Read lines from ``data_hashes.txt`` file.
+
+    hashfile = str(data_directory + ''/' + 'data_hashes.txt')
+    for line in open(filename, 'rt'):
+        i = str(line).split()
+        sha1 = i[0]
+        nii_file = i[1]
+        
+
+
     # Split into SHA1 hash and filename
+
     # Calculate actual hash for given filename.
     # If hash for filename is not the same as the one in the file, raise
     # ValueError
