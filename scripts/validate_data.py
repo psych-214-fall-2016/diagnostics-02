@@ -52,21 +52,21 @@ def validate_data(data_directory):
         ``data_hashes.txt`` file.
     """
     # Read lines from ``data_hashes.txt`` file.
-
-    hashfile = str(data_directory + ''/' + 'data_hashes.txt')
-    for line in open(filename, 'rt'):
-        i = str(line).split()
+    hashfile = str(data_directory + '/' + 'data_hashes.txt')
+    # Split into SHA1 hash and filename
+    for line in open(hashfile, 'rt'):
+        i = line.split()
         sha1 = i[0]
         nii_file = i[1]
-        
-
-
-    # Split into SHA1 hash and filename
-
     # Calculate actual hash for given filename.
-    # If hash for filename is not the same as the one in the file, raise
-    # ValueError
-    raise RuntimeError("No code yet")
+    # Generate the SHA1 hash string for these bytes
+        actualSHA1string = file_hash('data/' + nii_file)
+        if actualSHA1string != sha1:
+            # If hash for filename is not the same as the one in the file, raise
+            # ValueError
+            raise ValueError("Hash doesn't match!!! filename: " + nii_file)
+        if actualSHA1string == sha1:
+            print('YOU DID IT, THIS HASH MATCHES!' + nii_file)
 
 
 def main():
