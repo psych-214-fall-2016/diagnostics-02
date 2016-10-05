@@ -1,3 +1,21 @@
 Group meeting notes
 
 First, testing to see if we can successfully push a text file to our personal diagnostics folder, and then to the folder of our group within Github
+
+What to detect / measure of interest:
+- mean intensity/BOLD value
+
+Outlier detection methods:
+- standard deviation: mean +/- (std. dev. * multiplier)
+- interquartile range: upper = Q1/Q3 +/- (IQR * multiplier)
+- dvars (sum square of variance)
+- k-nearest neighbor (learning algorithm can be used for anomaly detection)
+
+Plan
+(1) plot mean values for each volume for each subject
+- build code to read .nii files in data directory
+- calculate mean for each volume across runs
+- for each subject, plot mean values of each volume across time/TR
+
+(2) from the code in (1), adapt an outlier method to determine outliers in the
+.nii files that we've loaded
