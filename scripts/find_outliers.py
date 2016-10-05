@@ -6,6 +6,8 @@ Run as:
 """
 
 import sys
+import numpy as np
+import nibabel as nib
 
 def find_outliers(data_directory):
     """ Print filenames and outlier indices for images in `data_directory`.
@@ -22,6 +24,19 @@ def find_outliers(data_directory):
     None
     """
     # Your code here
+
+    ## MLN:  10-5-16
+    # Identify image files in data_directory using names listed in
+    # 'hash_list.txt' (executed similarly to validate_data.py)
+    hashlist = str(data_directory + '/' + 'hash_list.txt')
+    for line in open(hashlist, 'rt'):
+        i = line.split()
+        imgfile = i[1]
+        # Load the image file
+        img = nib.load(imgfile, mmap=False)
+        # Retrieve data from image array
+        data = img.get_data()
+
     raise RuntimeError('No code yet')
 
 
@@ -35,6 +50,7 @@ def main():
     data_directory = sys.argv[1]
     # Call function to validate data in data directory
     find_outliers(data_directory)
+
 
 
 if __name__ == '__main__':
