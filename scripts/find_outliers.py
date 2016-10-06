@@ -26,6 +26,11 @@ def find_outliers(data_directory):
     # Your code here
 
     ## MLN:  10-5-16
+
+    #make an empty string array that will ultimately store which volumes
+    #are outliers
+    outlierarr = str[]
+
     # Identify image files in data_directory using names listed in
     # 'hash_list.txt' (executed similarly to validate_data.py)
     hashlist = str(data_directory + '/' + 'hash_list.txt')
@@ -36,6 +41,24 @@ def find_outliers(data_directory):
         img = nib.load(imgfile, mmap=False)
         # Retrieve data from image array
         data = img.get_data()
+
+        # Now here is where we do some dummy outlier code
+        for volume in data(:,:,:,volumeidx)
+            # Do something mathematical to this volume
+            # such as find its mean amount and then
+            # put that value in an array for later comparison
+            # with the next future volumes
+            volmath = [avgVal_vol1 avgVal_vol2 etc]
+
+        # if volume > criterion_for_being_outlier
+            outlierarr[volume] = str[imgfile + '_' + volume]
+            print(outlierarr)
+            #prints all vols that are outliers for this nifty file, then
+            #advances to the next nift file  named on the next line of
+            #"hast_list"
+
+
+
 
     raise RuntimeError('No code yet')
 
