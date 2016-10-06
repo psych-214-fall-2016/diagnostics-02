@@ -8,6 +8,7 @@ Run as:
 import sys
 import numpy as np
 import nibabel as nib
+import matplotlib.pyplot as plt
 
 def find_outliers(data_directory):
     """ Print filenames and outlier indices for images in `data_directory`.
@@ -29,30 +30,48 @@ def find_outliers(data_directory):
 
     #make an empty string array that will ultimately store which volumes
     #are outliers
-    outlierarr = str[]
+    outlierarr = []
 
     # Identify image files in data_directory using names listed in
     # 'hash_list.txt' (executed similarly to validate_data.py)
     hashlist = str(data_directory + '/' + 'hash_list.txt')
+
+    #iterating through to add to an array which contains the values for each volume for each files
+    k = 0
+    vol_means = {}
+
     for line in open(hashlist, 'rt'):
         i = line.split()
-        imgfile = i[1]
+        imgfile = str(data_directory + '/' + i[1]) #making this filename a string with full path
+        #print(imgfile) #testing to see through printing whether the data reads in
         # Load the image file
         img = nib.load(imgfile, mmap=False)
         # Retrieve data from image array
         data = img.get_data()
+        #take the mean of each volume and put into a column in the vol_means array
+        vol_means[str(k)] = np.mean(data, axis = (0,1,2))
+        k+=1
+
+    #print(vol_means)
+
+    #plot with subplots the means for each volume for each run
+    fig, ax = plt.subplots(14,1)
+    for i, ax in enumerate(ax):
+        ax.plot(vol_means[str(i)])
+        ax.set_ylabel('Run ' + str(i))
+    plt.show()
 
         # Now here is where we do some dummy outlier code
-        for volume in data(:,:,:,volumeidx)
+        #for volume in data(:,:,:,volumeidx)
             # Do something mathematical to this volume
             # such as find its mean amount and then
             # put that value in an array for later comparison
             # with the next future volumes
-            volmath = [avgVal_vol1 avgVal_vol2 etc]
+            #volmath = [avgVal_vol1 avgVal_vol2 etc]
 
         # if volume > criterion_for_being_outlier
-            outlierarr[volume] = str[imgfile + '_' + volume]
-            print(outlierarr)
+        #outlierarr[volume] = str[imgfile + '_' + volume]
+            #print(outlierarr)
             #prints all vols that are outliers for this nifty file, then
             #advances to the next nift file  named on the next line of
             #"hast_list"
