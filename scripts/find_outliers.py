@@ -39,6 +39,7 @@ def find_outliers(data_directory):
     #iterating through to add to an array which contains the values for each volume for each files
     k = 0
     vol_means = {}
+    volumes = {}
 
     for line in open(hashlist, 'rt'):
         i = line.split()
@@ -48,18 +49,21 @@ def find_outliers(data_directory):
         img = nib.load(imgfile, mmap=False)
         # Retrieve data from image array
         data = img.get_data()
-        #take the mean of each volume and put into a column in the vol_means array
+
+        volumes[str(k)] = data
+        #take the mean of each volume and put into the vol_means dictionary
         vol_means[str(k)] = np.mean(data, axis = (0,1,2))
         k+=1
 
-    #print(vol_means)
-
     #plot with subplots the means for each volume for each run
-    fig, ax = plt.subplots(14,1)
+    fig, ax = plt.subplots(20,1)
     for i, ax in enumerate(ax):
         ax.plot(vol_means[str(i)])
         ax.set_ylabel('Run ' + str(i))
+        ax.set_xlim(0,162)
+        print(len(vol_means[str(i)]))
     plt.show()
+
 
         # Now here is where we do some dummy outlier code
         #for volume in data(:,:,:,volumeidx)
