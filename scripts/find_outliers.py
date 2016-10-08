@@ -51,10 +51,12 @@ def find_outliers(data_directory):
         data = img.get_data()
 
         volumes[str(k)] = data
-        #take the mean of each volume and put into the vol_means dictionary
+        #take the mean of each volume and put into a column in the vol_means array
         vol_means[str(k)] = np.mean(data, axis = (0,1,2))
         k+=1
 
+    #print(vol_means)
+    # print(volumes[str(1)].shape)  #making sure this gives the shape of 1 run
     #plot with subplots the means for each volume for each run
     fig, ax = plt.subplots(20,1)
     for i, ax in enumerate(ax):
@@ -65,6 +67,77 @@ def find_outliers(data_directory):
     plt.show()
 
 
+    iqr_proportion = 1.5
+    for line in vol_means:
+        q1, q3 = np.percentile(vol_means[line], [25, 75])
+        iqr = q3 - q1
+        up_thresh = q3 + iqr * iqr_proportion
+        down_thresh = q1 - iqr * iqr_proportion
+        print(np.logical_or(vol_means[line] > up_thresh, vol_means[line] < down_thresh))
+
+
+
+
+
+
+    #making a residuals dictionary that contains a more linear version
+    # of the mean data. It gets rid of any drift in the data.
+
+
+    residuals = {}
+    for i in range(len(vol_means)):
+        data = vol_means[str(i)]
+        shape = data.shape[0]  # number of volumes
+        X = np.ones((shape, 2))  # make a 2 column  vector containing ones
+        drift = np.linspace(-1, 1, shape) # make an array of numbers stretching from -1 to 1
+        X[: , 1] = drift # puts the values of drift into the second column of X
+        beta = np.linalg.pinv(X).dot(data) # numpy function to give values of intercept and slope of best fitting line
+        fitted = X.dot(beta)  #creating the best fitted line
+        residual = data - fitted  #difference between mean array and the fitted array
+        residuals[str(i)] = residual + beta[0]  #adds the intercept to show the fitted version against the original mean value version
+
+        #print(np.corrcoef(drift, residual))
+        #print(beta)
+        #plt.plot(fitted)
+        #plt.show()
+
+        #plt.plot(vol_means[str(6)]) #looking at one of the mean plots
+        #plt.plot(residuals[str(6)]) #looking at one of the residual plots
+        #plt.show()
+
+
+
+# this function calculates the Dvars of the volumes
+    dvars = {}
+
+    for i in range(len(volumes)):
+        nvoxels = volumes[str(i)].shape[0] * volumes[str(i)].shape[1] * volumes[str(i)].shape[2]
+        num_vols = volumes[str(i)].shape[-1]
+        dvarsFirst = []
+        for elm in range(num_vols - 1):
+            data = volumes[str(i)]
+            diffs = data[:,:,:,elm] - data[:,:,:,elm + 1]
+            diffs = diffs**2 # Square the differences;
+            sumdiffs = sum(diffs.ravel()) # Sum over voxels for each volumevoxels;
+            avgdiffs = sumdiffs/nvoxels #divide by number of voxels
+            sqdiffs = np.sqrt(avgdiffs) # Return the square root of these values.
+            dvarsFirst.append(sqdiffs)
+        dvars[str(i)] = dvarsFirst
+        #print(dvars[str(i)])
+
+    fig, ax = plt.subplots(20,1)
+    for i, ax in enumerate(ax):
+        ax.plot(dvars[str(i)])
+        ax.set_ylabel('Run ' + str(i))
+    plt.show()
+
+
+
+
+
+
+
+            #return dvars
         # Now here is where we do some dummy outlier code
         #for volume in data(:,:,:,volumeidx)
             # Do something mathematical to this volume
@@ -78,7 +151,7 @@ def find_outliers(data_directory):
             #print(outlierarr)
             #prints all vols that are outliers for this nifty file, then
             #advances to the next nift file  named on the next line of
-            #"hast_list"
+            #"hast_list" '''
 
 
 
