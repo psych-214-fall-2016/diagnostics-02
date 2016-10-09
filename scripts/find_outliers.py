@@ -41,6 +41,7 @@ def find_outliers(data_directory):
     k = 0
     vol_means = {}
     volumes = {}
+    imgfiles = {}
 
     for line in open(hashlist, 'rt'):
         i = line.split()
@@ -54,6 +55,8 @@ def find_outliers(data_directory):
         volumes[str(k)] = data
         #take the mean of each volume and put into a column in the vol_means array
         vol_means[str(k)] = np.mean(data, axis = (0,1,2))
+        #storing filenames in a dictionary
+        imgfiles[str(k)] = i[1]
         k+=1
 
     #print(vol_means)
@@ -155,15 +158,15 @@ def find_outliers(data_directory):
         dvars_list = dvars_outside_brain[str(i)]
         vol_outliers = []
         for k in range(num_vols):
-            if dvars_list[k] > (np.mean(dvars_list) + 3*np.std(dvars_list))
+            if dvars_list[k] > (np.mean(dvars_list) + 3*np.std(dvars_list)):
                 vol_outliers.append(k)
-            elif dvars_list[k] < (np.mean(dvars_list) - 3*np.std(dvars_list))
+            elif dvars_list[k] < (np.mean(dvars_list) - 3*np.std(dvars_list)):
                 vol_outliers.append(k)
-        outliers(str(i)) = vol_outliers
+        outliers[str(i)] = vol_outliers
 
-    for i in len(outliers):
-        print('Run ' + str(i) + ':' + str(outliers(str(i))))
-            
+    for i in range(len(outliers)):
+        print(str(imgfiles[str(i)]) + ' outliers:' + str(outliers[str(i)]))
+
 
 
     # this function calculates the Dvars of the volumes
@@ -186,8 +189,14 @@ def find_outliers(data_directory):
 
     fig, ax = plt.subplots(20,1)
     for i, ax in enumerate(ax):
-        ax.plot(dvars_outside_brain[str(i)])
+        dvars_run = dvars_outside_brain[str(i)]
+        ax.plot(dvars_run)
+        xs = outliers[str(i)]
+        #ys = dvars_run[outliers[str(i)]]
+        ys = [dvars_run[o] for o in outliers[str(i)]]
+        ax.scatter(xs, ys, edgecolor = None, color = 'r')
         ax.set_ylabel('Run ' + str(i))
+        ax.set_xlim(0,162)
     plt.show()
 
 
