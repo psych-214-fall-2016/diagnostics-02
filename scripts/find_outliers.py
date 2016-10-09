@@ -9,6 +9,7 @@ import sys
 import numpy as np
 import nibabel as nib
 import matplotlib.pyplot as plt
+from scipy import stats
 
 def find_outliers(data_directory):
     """ Print filenames and outlier indices for images in `data_directory`.
@@ -116,52 +117,72 @@ def find_outliers(data_directory):
         #selecting a given run of volumes
         run = volumes[str(i)]
         num_vols = volumes[str(i)].shape[-1]
-        outside_brain = []
+        outside_brain = np.zeros(volumes[str(i)].shape)
         #now looping through each volume in the given run
-        for k in range(num_vols - 1):
+        for k in range(num_vols):
             vol = run[...,k]
-            lowvals = vol < (np.mean(vol) + 0.3*np.mean(vol))
-            selected = vol[lowvals]
-            outside_brain.append(selected)
+            #lowvals = vol < (np.mean(vol) + 0.3*np.mean(vol))
+            #selected = vol[lowvals]
+            #outside_brain.append(selected)
+            lowvals = stats.threshold(vol, threshmax = np.mean(vol) + 0.3*np.mean(vol), newval = 0)
+            outside_brain[...,k] = lowvals
         volumes_outside_brain[str(i)] = outside_brain
-        #print(volumes_outside_brain[str(i)])
+        print('Run ' + str(i) + ':' + str(volumes_outside_brain[str(i)].shape))
 
 
 #calculating the Dvars of the volumes for the area outside of the brain
     dvars_outside_brain = {}
 
     for i in range(len(volumes_outside_brain)):
-        npoints = volumes_outside_brain[str(i)].shape[]
-        num_vols = volumes[str(i)].shape[-1]
+        nvoxels = volumes_outside_brain[str(i)].shape[0] * volumes_outside_brain[str(i)].shape[1] * volumes_outside_brain[str(i)].shape[2]
+        num_vols = volumes_outside_brain[str(i)].shape[-1]
         dvarsFirst = []
         for k in range(num_vols - 1):
             data = volumes_outside_brain[str(i)]
-            diffs = data[k] - data[k + 1]
+            diffs = data[...,k] - data[...,k + 1]
             diffs = diffs**2 # Square the differences;
-            sumdiffs = sum(diffs)
-            avgdiffs = sumdiffs/npoints #divide by number items
+            sumdiffs = sum(diffs.ravel())
+            avgdiffs = sumdiffs/nvoxels #divide by number items
             sqdiffs = np.sqrt(avgdiffs) # Return the square root of these values.
             dvarsFirst.append(sqdiffs)
         dvars_outside_brain[str(i)] = dvarsFirst
-        print(len(dvars_outside_brain[str(i)])
+        print('dvars ' + str(i) + ':' + str(len(dvars_outside_brain[str(i)])))
 
-# this function calculates the Dvars of the volumes
-    """dvars = {}
+#initially selecting and printing outliers from dvars that are 3 s.d. or more away from mean
+    outliers = {}
+    for i in range(len(dvars_outside_brain)):
+        num_vols = len(dvars_outside_brain[str(i)])
+        dvars_list = dvars_outside_brain[str(i)]
+        vol_outliers = []
+        for k in range(num_vols):
+            if dvars_list[k] > (np.mean(dvars_list) + 3*np.std(dvars_list))
+                vol_outliers.append(k)
+            elif dvars_list[k] < (np.mean(dvars_list) - 3*np.std(dvars_list))
+                vol_outliers.append(k)
+        outliers(str(i)) = vol_outliers
 
-    for i in range(len(volumes)):
-        nvoxels = volumes[str(i)].shape[0] * volumes[str(i)].shape[1] * volumes[str(i)].shape[2]
-        num_vols = volumes[str(i)].shape[-1]
-        dvarsFirst = []
-        for elm in range(num_vols - 1):
-            data = volumes[str(i)]
-            diffs = data[:,:,:,elm] - data[:,:,:,elm + 1]
-            diffs = diffs**2 # Square the differences;
-            sumdiffs = sum(diffs.ravel()) # Sum over voxels for each volumevoxels;
-            avgdiffs = sumdiffs/nvoxels #divide by number of voxels
-            sqdiffs = np.sqrt(avgdiffs) # Return the square root of these values.
-            dvarsFirst.append(sqdiffs)
-        dvars[str(i)] = dvarsFirst
-        #print(dvars[str(i)])"""
+    for i in len(outliers):
+        print('Run ' + str(i) + ':' + str(outliers(str(i))))
+            
+
+
+    # this function calculates the Dvars of the volumes
+    #dvars = {}
+
+    #for i in range(len(volumes)):
+        #nvoxels = volumes[str(i)].shape[0] * volumes[str(i)].shape[1] * volumes[str(i)].shape[2]
+        #num_vols = volumes[str(i)].shape[-1]
+        #dvarsFirst = []
+        #for elm in range(num_vols - 1):
+        #    data = volumes[str(i)]
+        #    diffs = data[:,:,:,elm] - data[:,:,:,elm + 1]
+        #    diffs = diffs**2 # Square the differences;
+        #    sumdiffs = sum(diffs.ravel()) # Sum over voxels for each volumevoxels;
+        #    avgdiffs = sumdiffs/nvoxels #divide by number of voxels
+        #    sqdiffs = np.sqrt(avgdiffs) # Return the square root of these values.
+        #    dvarsFirst.append(sqdiffs)
+        #dvars[str(i)] = dvarsFirst
+        #print(dvars[str(i)])
 
     fig, ax = plt.subplots(20,1)
     for i, ax in enumerate(ax):
