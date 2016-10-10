@@ -1,4 +1,4 @@
-# Welcome, fellow neuroimager! 
+# Welcome, fellow neuroimager!
 
 Below are the instructions to run our outlier script of the diagnostics data.
 
@@ -12,16 +12,16 @@ You should put this `packages` directory on your Python PATH.
 
 This file has instructions on how to get, validate and process the data.
 
+## Cloning the diagnostics-2 repository to your computer
+
+    git clone https://github.com/psych-214-fall-2016/diagnostics-02.git
+
 ## Get the data
 
     cd data
     curl -LO http://nipy.bic.berkeley.edu/psych-214/group02.tar.gz
     tar zxvf group02.tar.gz
     cd ..
-
-## Cloning the diagnostics-2 repository to your computer
-
-    git clone https://github.com/psych-214-fall-2016/diagnostics-02.git
 
 ## Check the data - the output should confirm that the downloaded data matches the original data.
     python3 scripts/validate_data.py data
