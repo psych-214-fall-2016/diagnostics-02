@@ -1,0 +1,43 @@
+-After loading all of the data, we set a threshold on each volume in order to find
+  the parts of the data that were outside of the brain.
+-We calculated the root mean squared difference between volumes only for the voxels
+  we found to be outside the brain.
+-All outliers below are +/- 2.5 standard deviations from the mean of these values for
+  each run.
+-The outliers below were also plotted in the graph as red dots as a means of visualizing the
+  difference between the outliers and the rest of the volumes.
+
+
+-For outlier values that are at the beginning of the run (eg. outliers numbers 0-4),
+  it is likely these appear as outliers because the scanner is just beginning its cycle.
+
+-Outliers that appear in the middle of the run may be caused by subject movement
+  which often causes artifacts in the data.
+
+-Towards the end of the scan, subjects may have become fatigued or may have drifted
+  enough from their original position that those volumes appear as outliers.
+
+-Groups of volume outliers in a close sequence probably indicate rapid and/or sustained
+  movement from the subject. It may take several scans before they return to their original
+  position.  
+
+group02_sub01_run1.nii outliers:[42, 43, 104]
+group02_sub01_run2.nii outliers:[10, 11, 51, 52, 105]
+group02_sub02_run1.nii outliers:[50, 64, 65, 104]
+group02_sub02_run2.nii outliers:[21, 22, 55, 160]
+group02_sub03_run1.nii outliers:[49, 51, 136]
+group02_sub03_run2.nii outliers:[76, 78, 131]
+group02_sub04_run1.nii outliers:[80, 112, 132]
+group02_sub04_run2.nii outliers:[2]
+group02_sub05_run1.nii outliers:[4, 5, 6, 7, 12]
+group02_sub05_run2.nii outliers:[35, 49, 118]
+group02_sub06_run1.nii outliers:[78, 79, 132, 133]
+group02_sub06_run2.nii outliers:[23, 24, 26, 27]
+group02_sub07_run1.nii outliers:[30, 46, 71, 79, 80, 97, 130]
+group02_sub07_run2.nii outliers:[48, 49, 50, 51, 125, 142]
+group02_sub08_run1.nii outliers:[0, 110]
+group02_sub08_run2.nii outliers:[64, 105]
+group02_sub09_run1.nii outliers:[0, 31, 32, 56, 88, 115, 116]
+group02_sub09_run2.nii outliers:[0, 116, 117, 118]
+group02_sub10_run1.nii outliers:[23, 26, 27, 93, 94]
+group02_sub10_run2.nii outliers:[138, 139]

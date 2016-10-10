@@ -158,9 +158,9 @@ def find_outliers(data_directory):
         dvars_list = dvars_outside_brain[str(i)]
         vol_outliers = []
         for k in range(num_vols):
-            if dvars_list[k] > (np.mean(dvars_list) + 3*np.std(dvars_list)):
+            if dvars_list[k] > (np.mean(dvars_list) + 2.5*np.std(dvars_list)):
                 vol_outliers.append(k)
-            elif dvars_list[k] < (np.mean(dvars_list) - 3*np.std(dvars_list)):
+            elif dvars_list[k] < (np.mean(dvars_list) - 2.5*np.std(dvars_list)):
                 vol_outliers.append(k)
         outliers[str(i)] = vol_outliers
 
