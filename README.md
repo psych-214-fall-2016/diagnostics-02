@@ -1,4 +1,4 @@
-#arbitrary edit
+# Welcome, fellow neuroimager! 
 
 Below are the instructions to run our outlier script of the diagnostics data.
 
@@ -19,16 +19,14 @@ This file has instructions on how to get, validate and process the data.
     tar zxvf group02.tar.gz
     cd ..
 
-## cloning the our diagnostics-2 repository to your computer
+## Cloning the diagnostics-2 repository to your computer
 
     git clone https://github.com/psych-214-fall-2016/diagnostics-02.git
 
-## Check the data
-## the output should confirm that the downloaded data matches the original data.
+## Check the data - the output should confirm that the downloaded data matches the original data.
     python3 scripts/validate_data.py data
 
-## Find outliers
-## run the script to get each outlier volume for each run of the data.
+## Find outliers - run the script to get each outlier volume for each run of the data.
     python3 scripts/find_outliers.py data
 
     This should print output to the terminal:
