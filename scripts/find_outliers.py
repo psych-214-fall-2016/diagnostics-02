@@ -11,7 +11,7 @@ import nibabel as nib
 import matplotlib.pyplot as plt
 from scipy import stats
 
-def find_outliers(data_directory):
+def find_outliers(data_directory, do_plot=False):
     """ Print filenames and outlier indices for images in `data_directory`.
 
     Print filenames and detected outlier indices to the terminal.
@@ -20,6 +20,8 @@ def find_outliers(data_directory):
     ----------
     data_directory : str
         Directory containing containing images.
+    do_plot : {False, True}, optional
+        Whether to plot outliers after detecting.
 
     Returns
     -------
@@ -187,17 +189,18 @@ def find_outliers(data_directory):
         #dvars[str(i)] = dvarsFirst
         #print(dvars[str(i)])
 
-    fig, ax = plt.subplots(20,1)
-    for i, ax in enumerate(ax):
-        dvars_run = dvars_outside_brain[str(i)]
-        ax.plot(dvars_run)
-        xs = outliers[str(i)]
-        #ys = dvars_run[outliers[str(i)]]
-        ys = [dvars_run[o] for o in outliers[str(i)]]
-        ax.scatter(xs, ys, edgecolor = None, color = 'r')
-        ax.set_ylabel('Run ' + str(i))
-        ax.set_xlim(0,162)
-    plt.show()
+    if do_plot:
+        fig, ax = plt.subplots(20,1)
+        for i, ax in enumerate(ax):
+            dvars_run = dvars_outside_brain[str(i)]
+            ax.plot(dvars_run)
+            xs = outliers[str(i)]
+            #ys = dvars_run[outliers[str(i)]]
+            ys = [dvars_run[o] for o in outliers[str(i)]]
+            ax.scatter(xs, ys, edgecolor = None, color = 'r')
+            ax.set_ylabel('Run ' + str(i))
+            ax.set_xlim(0,162)
+        plt.show()
 
 
             #return dvars
@@ -215,8 +218,6 @@ def find_outliers(data_directory):
             #prints all vols that are outliers for this nifty file, then
             #advances to the next nift file  named on the next line of
             #"hast_list" '''
-
-    raise RuntimeError('No code yet')
 
 
 def main():
